@@ -1,22 +1,35 @@
 modules:
   jira:adminPage:
-    - key: forge-app-3-hello-world-admin-page
+    - key: queue-demo-panel
+      title: Queue Demo Panel
+      icon: https://developer.atlassian.com/platform/forge/images/issue-panel-icon.svg
       resource: main
       resolver:
         function: resolver
-      title: forge-app-3
+
+  consumer:
+    - key: queue-consumer
+      queue: long-task-queue
+      function: consumer-function
+
   function:
     - key: resolver
       handler: index.handler
+
+    - key: consumer-function
+      handler: index.processLongTask
+      timeoutSeconds: 600
+
 resources:
   - key: main
     path: static/hello-world/build
+
 app:
   runtime:
-    name: nodejs24.x
-    memoryMB: 256
-    architecture: arm64
-  id: ari:cloud:ecosystem::app/e9d53706-4c60-4f80-b7cc-448d4666a1a1
+    name: nodejs20.x
+  id: ari:cloud:ecosystem::app/8f551adf-389d-420c-ad05-ee6f4ed7f9a4
+
 permissions:
   scopes:
     - storage:app
+    - read:jira-work
